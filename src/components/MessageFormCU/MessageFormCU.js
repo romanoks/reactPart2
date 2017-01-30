@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as messageActions from 'actions/messageActions';
-import { TextField, SelectField } from 'redux-form-material-ui';
+import { TextField, SelectField, AutoComplete } from 'redux-form-material-ui';
 import { Field, initialize, reduxForm } from 'redux-form';
 import TextField2 from 'material-ui/TextField';
 import { browserHistory } from 'react-router';
 import { RaisedButton, MenuItem } from 'material-ui';
 import { Card,CardActions } from 'material-ui/Card';
+import {AutoComplete as MUIAutoComplete} from 'material-ui';
 import style from './style.css';
 import {Languages} from './language';
+import {Platforms} from './platForm';
 
     const MenuItemList = Languages.map((language, index)=>{
     return (
@@ -67,14 +69,13 @@ class MessageFormCU extends Component {
                 <Field
                   id="platform"
                   name="platform"
-                  component={SelectField}
+                  component={AutoComplete}
+                  openOnFocus={true}
                   hintText="Platform"
                   floatingLabelText="Platform"
-                  >
-                  <MenuItem value="" primaryText="" />
-                  <MenuItem value="ios" primaryText="iOS" />
-                  <MenuItem value="android" primaryText="android" />
-                </Field>
+                  filter={MUIAutoComplete.fuzzyFilter}
+                  dataSource={Platforms}
+                  />
               </div>
               <div>
                 <Field id= "message"

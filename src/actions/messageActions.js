@@ -25,6 +25,7 @@ const config = {
 
 export function updateMessage(values) {
   console.log('update');
+  console.log(values);
   const url = '/api/v2/message/testCustomer/persistent';
   return dispatch => {
     return axios.put(url, values,config)
