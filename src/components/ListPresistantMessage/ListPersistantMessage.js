@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { List, ListItem, Divider, Subheader,Card } from 'material-ui';
+import { List, ListItem, Divider, Subheader,Card, FlatButton } from 'material-ui';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { bindActionCreators } from 'redux';
@@ -8,6 +8,7 @@ import { browserHistory } from 'react-router';
 import TextField from 'material-ui/TextField';
 import SearchInput, {createFilter} from 'react-search-input';
 
+import Loading from 'components/Loading/Loading';
 import * as messageActions from 'actions/messageActions';
 
 const leftIconMenu = (
@@ -22,9 +23,15 @@ class ListPersistantMessage extends Component {
 
   constructor(props, context){
     super(props, context);
-    this.state = {searchTerm: ''};
+    this.state = {
+      searchTerm: '',
+      open: false
+    };
     this.searchUpdated = this.searchUpdated.bind(this);
   }
+
+
+
   componentWillMount() {
     this.props.actions.getAll('', '');
   }
@@ -41,6 +48,10 @@ class ListPersistantMessage extends Component {
     const isShow = false;
 
     const filtredMessage = this.props.messages.message.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
+
+    if(!this.props.messages.message.length === 0){
+      return <Loading />
+    }
     // this.props.messages.message
     const listItems = filtredMessage.map((message, index) => {
       return (
@@ -80,12 +91,18 @@ class ListPersistantMessage extends Component {
         </div >
       )
     });
-
     return (
         <div>
           <Card  style={{padding: '1em'}}>
             <List>
+            <div style={{display:'flex'}}>
               <SearchInput className='group'  onChange={this.searchUpdated} />
+              <FlatButton label="New message" primary onClick={()=>{
+                localStorage.setItem('messageEd', JSON.stringify({language:'',platform:'',message:''}));
+                browserHistory.push('persistantmessage');
+              }}
+              style={{marginLeft:'45%'}}/>
+            </div>
               {listItems}
             </List>
           </Card>
